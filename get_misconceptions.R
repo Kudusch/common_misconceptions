@@ -2,7 +2,6 @@
 library(httr2)
 library(rvest)
 library(dplyr)
-library(tibble)
 library(stringr)
 library(rio)
 
@@ -28,11 +27,11 @@ misconceptions <- misconceptions[misconceptions |>
   }) |> unlist()]
 ## Get text from elements
 misconceptions <- misconceptions |>
-    html_text()
+    html_text() |> stringr::str_trim()
 ## Remove further reading links etc.
 misconceptions <- misconceptions[str_length(misconceptions) >= 20]
 misconceptions <- misconceptions[!str_detect(misconceptions, "List of ")]
 misconceptions <- misconceptions[!misconceptions %in% c("Legends and myths regarding the Titanic", "Outline of public relations", "Pseudodoxia Epidemica", "Superseded theories in science", "Misconceptions taught by science textbooks")]
 
 # Write misconceptions to file ----
-export(tibble(misconception = misconceptions), "misconceptions.csv")
+export(data.frame(misconception = misconceptions), "misconceptions.csv")
